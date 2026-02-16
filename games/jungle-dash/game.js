@@ -296,6 +296,7 @@ const playerState = {
   finishLockedTimer: 0,
   levelMaxX: 39.5,
   stillTimer: 0,
+  lastX: 0,
   score: 0
 };
 
@@ -434,6 +435,7 @@ function respawn() {
   playerState.vy = 0;
   playerState.grounded = false;
   playerState.jumpsUsed = 0;
+  playerState.lastX = player.position.x;
 }
 
 function getPlayerBoxAt(x, y) {
@@ -611,20 +613,18 @@ function tickPhysics(dt) {
     updateStatus();
   }
 
-  const idleInput = !keys.left && !keys.right && !keys.jump;
-  const nearlyStill = Math.abs(playerState.vx) < 0.08 && Math.abs(playerState.vy) < 0.15;
-  if (idleInput && nearlyStill && playerState.grounded) {
+  const movedHoriz = Math.abs(player.position.x - playerState.lastX);
+  if (movedHoriz < 0.01) {
     playerState.stillTimer += dt;
   } else {
     playerState.stillTimer = 0;
   }
+  playerState.lastX = player.position.x;
 }
 
 function updateAlligators(dt, nowMs) {
   const t = nowMs * 0.001;
-  const noMoveInput = !keys.left && !keys.right;
-  const playerNotMovingHoriz = Math.abs(playerState.vx) < 0.08;
-  const playerIsIdle = noMoveInput && playerNotMovingHoriz;
+  const playerIsIdle = playerState.stillTimer > 0.22;
   let birdAvgX = player.position.x;
   if (active.birds.length > 0) {
     let totalBirdX = 0;
@@ -640,20 +640,6 @@ function updateAlligators(dt, nowMs) {
     if (hazard.stuckTimer === undefined) hazard.stuckTimer = 0;
     if (hazard.intentDir === undefined) hazard.intentDir = 0;
     if (hazard.comfortDist === undefined) hazard.comfortDist = 2.2;
-
-    // Guaranteed idle behavior: snap back to spawn when player stops moving.
-    if (playerIsIdle) {
-      hazard.x = hazard.spawnX ?? hazard.x;
-      hazard.y = hazard.spawnY ?? hazard.y;
-      hazard.vy = 0;
-      hazard.grounded = false;
-      hazard.jumpTimer = 0;
-      hazard.jumpsUsed = 0;
-      hazard.intentDir = 0;
-      hazard.mesh.position.x = hazard.x;
-      hazard.mesh.position.y = hazard.y;
-      continue;
-    }
 
     const dxToPlayer = player.position.x - hazard.x;
     const dyToPlayer = player.position.y - hazard.y;
@@ -759,10 +745,11 @@ function updateAlligators(dt, nowMs) {
     }
 
     if (nextY < -10) {
-      hazard.x = hazard.spawnX ?? hazard.x;
-      hazard.y = hazard.spawnY ?? hazard.y;
+      // Recovery without spawn-teleport: place on ground near current x.
+      hazard.x = THREE.MathUtils.clamp(nextX, 0.5, playerState.levelMaxX);
+      hazard.y = hazard.h * 0.5;
       hazard.vy = 0;
-      hazard.grounded = false;
+      hazard.grounded = true;
       hazard.jumpsUsed = 0;
       hazard.stuckTimer = 0;
     } else {
