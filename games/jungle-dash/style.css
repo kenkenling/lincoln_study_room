@@ -88,6 +88,28 @@ body {
   cursor: pointer;
 }
 
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.next-link {
+  display: inline-block;
+  text-decoration: none;
+  border: 0;
+  background: #1971c2;
+  color: white;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.next-link.hidden {
+  display: none;
+}
+
 #touchControls {
   position: fixed;
   left: 12px;

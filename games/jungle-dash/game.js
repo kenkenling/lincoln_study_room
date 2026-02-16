@@ -6,6 +6,7 @@ const overlayEl = document.getElementById("overlay");
 const overlayTitleEl = document.getElementById("overlayTitle");
 const overlayTextEl = document.getElementById("overlayText");
 const playAgainBtn = document.getElementById("playAgainBtn");
+const nextGameBtn = document.getElementById("nextGameBtn");
 const btnLeft = document.getElementById("btnLeft");
 const btnRight = document.getElementById("btnRight");
 const btnJump = document.getElementById("btnJump");
@@ -474,6 +475,7 @@ function showOverlay(title, text) {
 
 function hideOverlay() {
   overlayEl.classList.add("hidden");
+  if (nextGameBtn) nextGameBtn.classList.add("hidden");
 }
 
 function nextLevel() {
@@ -482,6 +484,8 @@ function nextLevel() {
     updateStatus();
     return;
   }
+  localStorage.setItem("jungleDashCompleted", "true");
+  if (nextGameBtn) nextGameBtn.classList.remove("hidden");
   showOverlay("🏆 You Win!", "Lincoln Wins the Golden Banana!");
 }
 
@@ -618,6 +622,16 @@ function tickPhysics(dt) {
 
 function updateAlligators(dt, nowMs) {
   const t = nowMs * 0.001;
+  const noMoveInput = !keys.left && !keys.right;
+  const playerNotMovingHoriz = Math.abs(playerState.vx) < 0.08;
+  const playerIsIdle = noMoveInput && playerNotMovingHoriz;
+  let birdAvgX = player.position.x;
+  if (active.birds.length > 0) {
+    let totalBirdX = 0;
+    for (const bird of active.birds) totalBirdX += bird.x;
+    birdAvgX = totalBirdX / active.birds.length;
+  }
+
   for (const hazard of active.alligators) {
     if (hazard.vy === undefined) hazard.vy = 0;
     if (hazard.grounded === undefined) hazard.grounded = false;
@@ -627,13 +641,29 @@ function updateAlligators(dt, nowMs) {
     if (hazard.intentDir === undefined) hazard.intentDir = 0;
     if (hazard.comfortDist === undefined) hazard.comfortDist = 2.2;
 
+    // Guaranteed idle behavior: snap back to spawn when player stops moving.
+    if (playerIsIdle) {
+      hazard.x = hazard.spawnX ?? hazard.x;
+      hazard.y = hazard.spawnY ?? hazard.y;
+      hazard.vy = 0;
+      hazard.grounded = false;
+      hazard.jumpTimer = 0;
+      hazard.jumpsUsed = 0;
+      hazard.intentDir = 0;
+      hazard.mesh.position.x = hazard.x;
+      hazard.mesh.position.y = hazard.y;
+      continue;
+    }
+
     const dxToPlayer = player.position.x - hazard.x;
     const dyToPlayer = player.position.y - hazard.y;
     const seesPlayer = Math.abs(dxToPlayer) < 22 && Math.abs(dyToPlayer) < 7.5;
-    const flankSign = Math.sin((hazard.behaviorSeed ?? 0) + t * 0.35) >= 0 ? 1 : -1;
-    const standOffX = player.position.x - flankSign * hazard.comfortDist;
     const roamX = (hazard.spawnX ?? hazard.x) + Math.sin(t * 0.65 + (hazard.behaviorSeed ?? 0)) * 2.1;
-    let desiredX = seesPlayer ? standOffX : roamX;
+    // Team tactic: alligators pressure opposite side of bird swarm.
+    const birdsMostlyRight = birdAvgX > player.position.x;
+    const flankSign = birdsMostlyRight ? -1 : 1;
+    const standOffX = player.position.x - flankSign * hazard.comfortDist;
+    let desiredX = playerIsIdle ? (hazard.spawnX ?? roamX) : (seesPlayer ? standOffX : roamX);
     let forceClimb = false;
 
     const onGroundFloor = hazard.grounded && hazard.y < 0.8;
@@ -660,7 +690,7 @@ function updateAlligators(dt, nowMs) {
     hazard.intentDir += (desiredDir - hazard.intentDir) * smooth;
 
     const baseSpeed = hazard.chaseSpeed ?? 4.8;
-    const speedScale = seesPlayer ? 1 : 0.55;
+    const speedScale = playerIsIdle ? 0.85 : (seesPlayer ? 1 : 0.55);
     const speed = baseSpeed * speedScale;
     let nextX = hazard.x + hazard.intentDir * speed * dt;
     const currentY = hazard.y;
@@ -699,7 +729,7 @@ function updateAlligators(dt, nowMs) {
     const playerIsHigher = player.position.y > hazard.y + 0.85;
     const closeToPlayer = Math.abs(dxToPlayer) < 4.1;
     const alignedForClimb = forceClimb && Math.abs(desiredX - hazard.x) < 2.4;
-    const needsClimbJump = (playerIsHigher && closeToPlayer) || alignedForClimb;
+    const needsClimbJump = !playerIsIdle && ((playerIsHigher && closeToPlayer) || alignedForClimb);
     const wantsJump = blockedHoriz || needsClimbJump;
     // Jump only when needed, and only from ground for stable behavior.
     if (wantsJump && hazard.jumpTimer === 0 && hazard.grounded) {
@@ -748,8 +778,19 @@ function updateAlligators(dt, nowMs) {
 function updateBirds(dt, nowMs) {
   const t = nowMs * 0.001;
   const playerIsIdle = playerState.stillTimer > 0.35;
+  let gatorAvgX = player.position.x;
+  if (active.alligators.length > 0) {
+    let totalGatorX = 0;
+    for (const gator of active.alligators) totalGatorX += gator.x;
+    gatorAvgX = totalGatorX / active.alligators.length;
+  }
+
   for (const bird of active.birds) {
-    const targetX = playerIsIdle ? bird.spawnX : player.position.x;
+    // Team tactic: birds approach from opposite side of alligators.
+    const alligatorsMostlyRight = gatorAvgX > player.position.x;
+    const aerialFlank = alligatorsMostlyRight ? -1 : 1;
+    const attackX = player.position.x + aerialFlank * 1.8;
+    const targetX = playerIsIdle ? bird.spawnX : attackX;
     const baseTargetY = playerIsIdle ? bird.spawnY : player.position.y + 1.5;
     const targetY = THREE.MathUtils.clamp(
       baseTargetY + Math.sin(t * bird.driftRate + bird.phase) * bird.drift,

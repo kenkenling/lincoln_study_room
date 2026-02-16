@@ -4,6 +4,7 @@ This repository now hosts multiple browser games:
 
 - `games/jungle-dash/` - 3D parkour platformer built with Three.js
 - `games/math-explosion/` - fast 60-second math challenge
+- `games/geometry-dashj/` - auto-run obstacle dash (unlocked after Jungle Dash)
 
 Main hub page:
 - `index.html`
@@ -12,6 +13,7 @@ Main hub page:
 - `https://kenkenling.github.io/lincoln_study_room/`
 - `https://kenkenling.github.io/lincoln_study_room/games/jungle-dash/`
 - `https://kenkenling.github.io/lincoln_study_room/games/math-explosion/`
+- `https://kenkenling.github.io/lincoln_study_room/games/geometry-dashj/`
 
 ## Jungle Dash
 
@@ -22,6 +24,7 @@ Main hub page:
 - Collect the banana and defeat at least one bird to clear each level
 - Alligators and birds are active enemies (you can stomp them for points)
 - Checkpoints save progress within each level
+- Beating Jungle Dash unlocks Geometry DashJ
 
 ## Controls
 - Move: `A/D` or `Left/Right`
@@ -43,3 +46,4 @@ Then visit:
 - `http://localhost:8000/`
 - `http://localhost:8000/games/jungle-dash/`
 - `http://localhost:8000/games/math-explosion/`
+- `http://localhost:8000/games/geometry-dashj/`
