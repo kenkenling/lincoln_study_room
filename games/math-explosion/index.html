@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Math Explosion</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <a class="back" href="../../">← Back to Game Hub</a>
+    <h1>Math Explosion</h1>
+    <p class="sub">Answer as many problems as you can in 60 seconds.</p>
+
+    <section class="panel">
+      <div class="top">
+        <span>Time: <strong id="time">60</strong>s</span>
+        <span>Score: <strong id="score">0</strong></span>
+      </div>
+      <div id="question" class="question">Press Start</div>
+      <input id="answer" type="number" inputmode="numeric" placeholder="Type answer" disabled />
+      <div class="buttons">
+        <button id="submitBtn" disabled>Submit</button>
+        <button id="startBtn">Start</button>
+      </div>
+      <p id="feedback" class="feedback"></p>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

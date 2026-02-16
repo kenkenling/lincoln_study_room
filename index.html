@@ -3,29 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lincoln's Jungle Dash</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Lincoln Game Hub</title>
+  <style>
+    :root {
+      --bg1: #e3f2ff;
+      --bg2: #fff7e6;
+      --panel: #ffffff;
+      --text: #102a43;
+      --accent: #0b7285;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", Verdana, sans-serif;
+      color: var(--text);
+      background: linear-gradient(140deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .wrap {
+      width: min(920px, 100%);
+      background: var(--panel);
+      border-radius: 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      padding: 20px;
+    }
+    h1 { margin: 0 0 8px; }
+    p { margin: 0 0 16px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      border: 1px solid #d9e2ec;
+      border-radius: 12px;
+      padding: 14px;
+      background: #f8fbff;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 18px; }
+    .card p { margin: 0 0 12px; font-size: 14px; }
+    a.btn {
+      display: inline-block;
+      text-decoration: none;
+      color: white;
+      background: var(--accent);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-  <div id="hud">
-    <h1>Lincoln's Jungle Dash</h1>
-    <p>Move: A/D or Left/Right | Jump: Space/W/Up | Restart Level: R</p>
-    <p id="status">Level 1 / 7</p>
-  </div>
-  <div id="overlay" class="hidden">
-    <div class="card">
-      <h2 id="overlayTitle">You Win!</h2>
-      <p id="overlayText">Lincoln wins the Golden Banana!</p>
-      <button id="playAgainBtn">Play Again</button>
-    </div>
-  </div>
-  <div id="touchControls" aria-label="Touch controls">
-    <button id="btnLeft" class="ctrl-btn" aria-label="Move left">◀</button>
-    <button id="btnRight" class="ctrl-btn" aria-label="Move right">▶</button>
-    <button id="btnJump" class="ctrl-btn jump" aria-label="Jump">JUMP</button>
-  </div>
-  <canvas id="gameCanvas"></canvas>
-
-  <script type="module" src="game.js"></script>
+  <main class="wrap">
+    <h1>Lincoln Game Hub</h1>
+    <p>Select a game:</p>
+    <section class="grid">
+      <article class="card">
+        <h2>Lincoln's Jungle Dash</h2>
+        <p>3D parkour challenge with enemies, checkpoints, and banana objectives.</p>
+        <a class="btn" href="./games/jungle-dash/">Play Jungle Dash</a>
+      </article>
+      <article class="card">
+        <h2>Math Explosion</h2>
+        <p>Fast mental-math challenge game with score and timer.</p>
+        <a class="btn" href="./games/math-explosion/">Play Math Explosion</a>
+      </article>
+    </section>
+  </main>
 </body>
 </html>

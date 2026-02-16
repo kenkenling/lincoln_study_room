@@ -1,4 +1,19 @@
-# Lincoln's Jungle Dash
+# Lincoln Game Hub
+
+This repository now hosts multiple browser games:
+
+- `games/jungle-dash/` - 3D parkour platformer built with Three.js
+- `games/math-explosion/` - fast 60-second math challenge
+
+Main hub page:
+- `index.html`
+
+## URLs (GitHub Pages)
+- `https://kenkenling.github.io/lincoln_study_room/`
+- `https://kenkenling.github.io/lincoln_study_room/games/jungle-dash/`
+- `https://kenkenling.github.io/lincoln_study_room/games/math-explosion/`
+
+## Jungle Dash
 
 `Lincoln's Jungle Dash` is a browser-based 3D platformer built with Three.js.
 
@@ -18,10 +33,13 @@
 - Stomp alligator: `+50`
 
 ## Run
-Open `index.html` in a browser, or run a local server:
+Open `games/jungle-dash/index.html` in a browser, or run a local server:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then visit `http://localhost:8000`.
+Then visit:
+- `http://localhost:8000/`
+- `http://localhost:8000/games/jungle-dash/`
+- `http://localhost:8000/games/math-explosion/`
