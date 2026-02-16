@@ -17,6 +17,7 @@ body {
   overflow: hidden;
   font-family: "Trebuchet MS", "Verdana", sans-serif;
   background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+  touch-action: none;
 }
 
 #gameCanvas {
@@ -85,4 +86,55 @@ body {
   border-radius: 8px;
   padding: 10px 14px;
   cursor: pointer;
+}
+
+#touchControls {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 14px;
+  z-index: 15;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.ctrl-btn {
+  pointer-events: auto;
+  border: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.ctrl-btn.jump {
+  width: 96px;
+  height: 96px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  background: rgba(47, 158, 68, 0.82);
+}
+
+.ctrl-btn:active {
+  transform: scale(0.96);
+}
+
+@media (hover: none), (pointer: coarse) {
+  #touchControls {
+    display: flex;
+  }
+
+  #hud {
+    max-width: calc(100vw - 24px);
+  }
 }

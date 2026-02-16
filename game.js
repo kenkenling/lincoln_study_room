@@ -6,6 +6,9 @@ const overlayEl = document.getElementById("overlay");
 const overlayTitleEl = document.getElementById("overlayTitle");
 const overlayTextEl = document.getElementById("overlayText");
 const playAgainBtn = document.getElementById("playAgainBtn");
+const btnLeft = document.getElementById("btnLeft");
+const btnRight = document.getElementById("btnRight");
+const btnJump = document.getElementById("btnJump");
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x9edfff);
@@ -789,6 +792,53 @@ window.addEventListener("keyup", (e) => {
     keys.jumpQueued = false;
   }
 });
+
+function bindTouchButton(button, onDown, onUp) {
+  if (!button) return;
+  const handleDown = (e) => {
+    e.preventDefault();
+    onDown();
+  };
+  const handleUp = (e) => {
+    e.preventDefault();
+    onUp();
+  };
+  button.addEventListener("pointerdown", handleDown, { passive: false });
+  button.addEventListener("pointerup", handleUp, { passive: false });
+  button.addEventListener("pointercancel", handleUp, { passive: false });
+  button.addEventListener("pointerleave", handleUp, { passive: false });
+}
+
+bindTouchButton(
+  btnLeft,
+  () => {
+    keys.left = true;
+  },
+  () => {
+    keys.left = false;
+  }
+);
+
+bindTouchButton(
+  btnRight,
+  () => {
+    keys.right = true;
+  },
+  () => {
+    keys.right = false;
+  }
+);
+
+bindTouchButton(
+  btnJump,
+  () => {
+    keys.jump = true;
+    keys.jumpQueued = true;
+  },
+  () => {
+    keys.jump = false;
+  }
+);
 
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
