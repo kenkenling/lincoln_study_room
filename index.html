@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lincoln's Jungle Dash</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="hud">
+    <h1>Lincoln's Jungle Dash</h1>
+    <p>Move: A/D or Left/Right | Jump: Space/W/Up | Restart Level: R</p>
+    <p id="status">Level 1 / 5</p>
+  </div>
+  <div id="overlay" class="hidden">
+    <div class="card">
+      <h2 id="overlayTitle">You Win!</h2>
+      <p id="overlayText">Lincoln wins the Golden Banana!</p>
+      <button id="playAgainBtn">Play Again</button>
+    </div>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>
