@@ -271,7 +271,7 @@ function generateLevel(levelIndex) {
   };
 }
 
-const levels = Array.from({ length: 25 }, (_, i) => generateLevel(i));
+const levels = Array.from({ length: 7 }, (_, i) => generateLevel(i));
 
 const active = {
   platforms: [],
