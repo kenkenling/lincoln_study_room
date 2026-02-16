@@ -55,17 +55,6 @@
       font-weight: 700;
       font-size: 14px;
     }
-    .btn.disabled {
-      background: #829ab1;
-      pointer-events: none;
-      opacity: 0.85;
-    }
-    .unlock-note {
-      margin: 6px 0 0;
-      font-size: 12px;
-      color: #486581;
-      font-weight: 700;
-    }
   </style>
 </head>
 <body>
@@ -85,21 +74,10 @@
       </article>
       <article class="card">
         <h2>Geometry DashJ</h2>
-        <p>Auto-run obstacle dash. Unlock by beating Jungle Dash first.</p>
-        <a id="geoDashBtn" class="btn disabled" href="./games/geometry-dashj/">Locked</a>
-        <p id="geoDashNote" class="unlock-note">Beat Jungle Dash to unlock.</p>
+        <p>Auto-run obstacle dash with hard spike patterns.</p>
+        <a class="btn" href="./games/geometry-dashj/">Play Geometry DashJ</a>
       </article>
     </section>
   </main>
-  <script>
-    const unlocked = localStorage.getItem("jungleDashCompleted") === "true";
-    const btn = document.getElementById("geoDashBtn");
-    const note = document.getElementById("geoDashNote");
-    if (unlocked) {
-      btn.textContent = "Play Geometry DashJ";
-      btn.classList.remove("disabled");
-      note.textContent = "Unlocked!";
-    }
-  </script>
 </body>
 </html>

@@ -1,4 +1,18 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js";
+if (typeof window.THREE === "undefined") {
+  document.body.innerHTML = `
+    <div style="font-family:Trebuchet MS,Verdana,sans-serif;padding:20px;line-height:1.5">
+      <h2>Jungle Dash could not start</h2>
+      <p><strong>Reason:</strong> Three.js failed to load in <code>file://</code> mode.</p>
+      <p>Quick fix:</p>
+      <ol>
+        <li>From this project root, run: <code>python3 -m http.server 8000</code></li>
+        <li>Open: <code>http://localhost:8000/games/jungle-dash/</code></li>
+      </ol>
+      <p>Or place a local <code>three.min.js</code> file in <code>games/jungle-dash/</code>.</p>
+    </div>
+  `;
+  throw new Error("Three.js not loaded");
+}
 
 const canvas = document.getElementById("gameCanvas");
 const statusEl = document.getElementById("status");
@@ -272,7 +286,7 @@ function generateLevel(levelIndex) {
   };
 }
 
-const levels = Array.from({ length: 7 }, (_, i) => generateLevel(i));
+const levels = Array.from({ length: 10 }, (_, i) => generateLevel(i));
 
 const active = {
   platforms: [],

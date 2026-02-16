@@ -4,7 +4,7 @@ This repository now hosts multiple browser games:
 
 - `games/jungle-dash/` - 3D parkour platformer built with Three.js
 - `games/math-explosion/` - fast 60-second math challenge
-- `games/geometry-dashj/` - auto-run obstacle dash (unlocked after Jungle Dash)
+- `games/geometry-dashj/` - auto-run obstacle dash
 
 Main hub page:
 - `index.html`
@@ -20,11 +20,10 @@ Main hub page:
 `Lincoln's Jungle Dash` is a browser-based 3D platformer built with Three.js.
 
 ## Game Summary
-- 7 progressively harder parkour levels
+- 10 progressively harder parkour levels
 - Collect the banana and defeat at least one bird to clear each level
 - Alligators and birds are active enemies (you can stomp them for points)
 - Checkpoints save progress within each level
-- Beating Jungle Dash unlocks Geometry DashJ
 
 ## Controls
 - Move: `A/D` or `Left/Right`

@@ -1,4 +1,3 @@
-const lockedEl = document.getElementById("locked");
 const gameWrapEl = document.getElementById("gameWrap");
 const canvas = document.getElementById("game");
 const scoreEl = document.getElementById("score");
@@ -6,19 +5,12 @@ const bestEl = document.getElementById("best");
 const hintEl = document.getElementById("hint");
 const restartBtn = document.getElementById("restartBtn");
 
-const unlocked = localStorage.getItem("jungleDashCompleted") === "true";
-if (!unlocked) {
-  lockedEl.classList.remove("hidden");
-} else {
-  gameWrapEl.classList.remove("hidden");
-}
-
-if (!unlocked) {
-  // Locked state only; stop here.
-} else {
+if (gameWrapEl) gameWrapEl.classList.remove("hidden");
+{
   const ctx = canvas.getContext("2d");
   const world = {
-    speed: 290,
+    baseSpeed: 360,
+    speed: 360,
     gravity: 2100,
     jumpPower: 780,
     score: 0,
@@ -45,14 +37,36 @@ if (!unlocked) {
     player.vy = 0;
   }
 
-  function spawnSpike() {
-    const size = 24 + Math.random() * 18;
+  function spawnSpike(offsetX = 0, sizeOverride = null) {
+    const size = sizeOverride ?? 24 + Math.random() * 20;
     spikes.push({
-      x: canvas.width + size,
+      x: canvas.width + size + offsetX,
       y: groundY,
       w: size,
       h: size
     });
+  }
+
+  function spawnPattern() {
+    const size = 24 + Math.random() * 18;
+    const roll = Math.random();
+
+    // Much harder: many doubles/triples as score rises.
+    if (roll < 0.45) {
+      spawnSpike(0, size);
+      return;
+    }
+    if (roll < 0.82) {
+      const gap = 35 + Math.random() * 18;
+      spawnSpike(0, size);
+      spawnSpike(gap, 20 + Math.random() * 16);
+      return;
+    }
+    const gap1 = 30 + Math.random() * 14;
+    const gap2 = gap1 + 28 + Math.random() * 16;
+    spawnSpike(0, size);
+    spawnSpike(gap1, 18 + Math.random() * 14);
+    spawnSpike(gap2, 18 + Math.random() * 14);
   }
 
   function rectHit(a, b) {
@@ -87,10 +101,11 @@ if (!unlocked) {
     world.score = 0;
     world.over = false;
     world.started = false;
-    spawnTimer = 0.7;
+    spawnTimer = 0.45;
     hintEl.textContent = "Tap / Space / ↑ to jump";
     restartBtn.classList.add("hidden");
     scoreEl.textContent = "0";
+    world.speed = world.baseSpeed;
     resetPlayer();
   }
 
@@ -124,11 +139,13 @@ if (!unlocked) {
     if (world.started) {
       world.score += dt * 10;
       scoreEl.textContent = String(Math.floor(world.score));
+      world.speed = world.baseSpeed + Math.min(220, world.score * 1.9);
 
       spawnTimer -= dt;
       if (spawnTimer <= 0) {
-        spawnSpike();
-        spawnTimer = 0.62 + Math.random() * 0.65;
+        spawnPattern();
+        const pressure = Math.min(0.2, world.score * 0.0015);
+        spawnTimer = 0.4 + Math.random() * 0.42 - pressure;
       }
 
       for (let i = spikes.length - 1; i >= 0; i -= 1) {
