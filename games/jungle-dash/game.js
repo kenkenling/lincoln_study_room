@@ -1,18 +1,27 @@
 if (typeof window.THREE === "undefined") {
+  const reason =
+    window.location.protocol === "file:"
+      ? 'Three.js could not be loaded from a local "file://" page.'
+      : "Three.js could not be loaded. The local file is missing or the CDN is unavailable.";
+
   document.body.innerHTML = `
-    <div style="font-family:Trebuchet MS,Verdana,sans-serif;padding:20px;line-height:1.5">
+    <div style="font-family:Trebuchet MS,Verdana,sans-serif;padding:20px;line-height:1.5;max-width:720px">
       <h2>Jungle Dash could not start</h2>
-      <p><strong>Reason:</strong> Three.js failed to load in <code>file://</code> mode.</p>
-      <p>Quick fix:</p>
+      <p><strong>Reason:</strong> ${reason}</p>
+      <p>This page tries both:</p>
+      <ul>
+        <li><code>games/jungle-dash/three.min.js</code></li>
+        <li>the hosted Three.js CDN fallback</li>
+      </ul>
+      <p><strong>Quick fix:</strong></p>
       <ol>
         <li>From this project root, run: <code>python3 -m http.server 8000</code></li>
         <li>Open: <code>http://localhost:8000/games/jungle-dash/</code></li>
       </ol>
-      <p>Or place a local <code>three.min.js</code> file in <code>games/jungle-dash/</code>.</p>
+      <p>For fully local/offline play, add a copy of <code>three.min.js</code> to <code>games/jungle-dash/</code>.</p>
     </div>
   `;
-  throw new Error("Three.js not loaded");
-}
+} else {
 
 const canvas = document.getElementById("gameCanvas");
 const statusEl = document.getElementById("status");
@@ -913,3 +922,4 @@ function loop(now) {
 
 loadLevel(0);
 requestAnimationFrame(loop);
+}
